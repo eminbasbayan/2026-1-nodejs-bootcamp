@@ -4,6 +4,6 @@ const add = (a, b) => {
 
 const sum = add(3, 5);
 
-console.log(sum);
+module.exports = add;
 
 
