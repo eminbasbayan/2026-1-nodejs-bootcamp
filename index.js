@@ -1,6 +1,8 @@
 const http = require("node:http");
 const fs = require("node:fs");
 
+const loginUser = "Emin";
+
 
 const server = http.createServer((request, response) => {
 
@@ -13,7 +15,8 @@ const server = http.createServer((request, response) => {
         }
         response.statusCode = 200;
         response.setHeader("Content-Type", "text/html");
-        response.end(data);
+        const htmlContent = data.toString().replace("{{loginUser}}", loginUser);
+        response.end(htmlContent);
     })
 })
 
