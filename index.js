@@ -6,18 +6,22 @@ const loginUser = "Emin";
 
 const server = http.createServer((request, response) => {
 
-    fs.readFile("./index.html", (err, data) => {
-        if (err) {
-            response.statusCode = 500;
-            response.setHeader("Content-Type", "text/plain");
-            response.end("Server Error!");
-            return;
-        }
-        response.statusCode = 200;
-        response.setHeader("Content-Type", "text/html");
-        const htmlContent = data.toString().replace("{{loginUser}}", loginUser);
-        response.end(htmlContent);
-    })
+    if (request.url === "/") {
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.end("<h1>Ana Sayfa</h1>");
+    } else if (request.url === "/products") {
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.end("<h1>Ürünler</h1>");
+    } else if (request.url === "/contact") {
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.end("<h1>İletişim</h1>");
+    } else if (request.url === "/about") {
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.end("<h1>Hakkımızda</h1>");
+    } else {
+        response.writeHead(404, { "Content-Type": "text/html" });
+        response.end("<h1>404 Not Found</h1>");
+    }
 })
 
 server.listen(3000, () => {
