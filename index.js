@@ -1,19 +1,11 @@
-const fs = require("node:fs")
+const http = require("node:http");
 
-const readStream = fs.createReadStream("./file.txt", {
-    highWaterMark: 2
-});
-
-readStream.on("data", (chunk) => {
-    console.log(chunk.toString());
+const server = http.createServer((request, response) => {
+    response.statusCode = 200;
+    response.setHeader("Content-Type", "text/plain");
+    response.end("Hello World!")
 })
 
-readStream.on("end", () => {
-    console.log("İşlem Tamamlandı!");
+server.listen(3000, () => {
+    console.log("Server started on port 3000");
 })
-
-readStream.on("error", (error) => {
-    console.log(error);
-})
-
-
