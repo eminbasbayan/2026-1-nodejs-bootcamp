@@ -38,8 +38,27 @@ app.put('/api/users', (req, res) => {
   } else {
     res.json({ success: false, message: 'Kullanıcı Bulunamadı!' });
   }
+});
 
-  // findUser.email = email;
+app.put('/api/users/:userId', (req, res) => {
+  const { email } = req.body;
+  const { userId } = req.params;
+
+  console.log(typeof userId);
+
+  const findUser = users.find((user) => user.id === Number(userId));
+
+  if (findUser) {
+    users = users.map((user) => {
+      if (user.id === findUser.id) {
+        return { ...user, email };
+      }
+      return user;
+    });
+    res.json({ success: true, users });
+  } else {
+    res.json({ success: false, message: 'Kullanıcı Bulunamadı!' });
+  }
 });
 
 app.use((req, res) => {
