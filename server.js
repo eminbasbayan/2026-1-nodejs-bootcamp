@@ -4,6 +4,7 @@ const cors = require('cors');
 const fs = require('node:fs');
 const path = require('node:path');
 const { logger } = require('./middleware/logEvents.js');
+const errorHandler = require('./middleware/errorHandler.js');
 const PORT = 3000;
 
 const corsOptions = {
@@ -31,6 +32,9 @@ app.use(cors(corsOptions));
 
 // Request log middleware
 app.use(logger);
+
+// Request error log middleware
+app.use(errorHandler);
 
 // Middleware to parse JSON badies
 app.use(express.json());
