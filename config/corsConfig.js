@@ -5,8 +5,8 @@ const allowedOrigins = [
   'https://www.google.com',
 ];
 
-const isAllowedIyzicoOrigin = (origin) => {
-  return /^https:\/\/([a-z0-9-]+\.)?iyzipay\.com$/i.test(origin);
+const isAllowedPaymentOrigin = (origin) => {
+  return /^https:\/\/([a-z0-9-]+\.)?(iyzipay\.com|stripe\.com)$/i.test(origin);
 };
 
 const corsOptions = {
@@ -15,7 +15,7 @@ const corsOptions = {
     const isNullOrigin = origin === 'null' || origin === null || origin === undefined;
     const isWhitelistedOrigin = allowedOrigins.includes(origin);
 
-    if (isNullOrigin || isWhitelistedOrigin || isAllowedIyzicoOrigin(origin)) {
+    if (isNullOrigin || isWhitelistedOrigin || isAllowedPaymentOrigin(origin)) {
       callback(null, true);
     } else {
       console.log(`CORS tarafından reddedilen origin: ${origin}`);

@@ -11,6 +11,7 @@ const authRoutes = require('./routes/authRoutes.js');
 const productRoutes = require('./routes/productRoutes.js');
 const categoryRoutes = require('./routes/categoryRoutes.js');
 const iyzicoPaymentRoutes = require('./routes/iyzicoPaymentRoutes.js');
+const stripePaymentRoutes = require('./routes/stripePaymentRoutes.js');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger.js');
 const connectDB = require('./config/dbConfig.js');
@@ -54,6 +55,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/iyzico-payments', iyzicoPaymentRoutes);
+app.use('/api/stripe-payments', stripePaymentRoutes);
 io.on('connection', (socket) => {
   socket.on('chat message', (rawMessage) => {
     const message = typeof rawMessage === 'string' ? rawMessage.trim() : '';
