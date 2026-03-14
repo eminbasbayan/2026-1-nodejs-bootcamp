@@ -1,4 +1,4 @@
-const ApiResponse = require('../../utils/apiResponse');
+const ApiResponse = require('../utils/apiResponse');
 
 const errorHandler = (error, req, res, _next) => {
     console.error(`[HATA] ${error.message}`);
