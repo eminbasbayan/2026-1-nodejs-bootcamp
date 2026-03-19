@@ -8,7 +8,22 @@ services:
     env_file:
       - ./user-service/.env.docker
     ports:
-      - "3001:3001"
+      - '3001:3001'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3001/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - microservices-net
 
@@ -21,11 +36,47 @@ services:
     env_file:
       - ./order-service/.env.docker
     ports:
-      - "3002:3002"
+      - '3002:3002'
     depends_on:
-      - user-service
+      mongodb:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3002/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - microservices-net
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb-container
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test:
+        ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - microservices-net
+
+volumes:
+  mongo-data:
 
 networks:
   microservices-net:
