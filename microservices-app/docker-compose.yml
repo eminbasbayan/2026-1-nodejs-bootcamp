@@ -75,8 +75,51 @@ services:
     networks:
       - microservices-net
 
+  product-mysql:
+    image: mysql:8.4
+    container_name: product-mysql-container
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: product_service
+      MYSQL_USER: product_user
+      MYSQL_PASSWORD: product_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - product-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - microservices-net
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service-container
+    restart: unless-stopped
+    env_file:
+      - ./product-service/.env.docker
+    depends_on:
+      product-mysql:
+        condition: service_healthy
+    ports:
+      - "3004:3003"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3003/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - microservices-net
+
 volumes:
-  mongo-data:
+   mongo-data:
+   product-mysql-data:
 
 networks:
   microservices-net:
