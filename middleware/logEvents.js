@@ -1,12 +1,12 @@
 const { format } = require('date-fns');
-const { v4: uuid } = require('uuid');
+const { randomUUID } = require('crypto');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const path = require('path');
 
 const logEvents = async (message, logFileName) => {
   const dateTime = format(new Date(), 'dd.MM.yyyy - HH.mm.ss');
-  const logItem = `${dateTime}\t${uuid()}\t${message}`;
+  const logItem = `${dateTime}\t${randomUUID()}\t${message}`;
 
   try {
     if (!fs.existsSync(path.join(__dirname, '..', 'logs'))) {
